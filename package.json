@@ -1,0 +1,29 @@
+{
+  "name": "onobot",
+  "version": "0.0.1",
+  "description": "Slack bot for Onomat things",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=prod; node index.js",
+    "dev": "NODE_ENV=dev; nodemon index.js",
+    "test": "jest"
+  },
+  "author": "Samuel Kwak <kwak123@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/client": "^4.8.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "dotenv": "^6.1.0",
+    "eslint": "^5.8.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.26.2",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.5"
+  }
+}
