@@ -1,5 +1,5 @@
 const redis = require('../src/db/redis');
-const users = require('../src/users');
+const users = require('../src/db/users');
 
 describe('users', () => {
   beforeEach(() => redis.flushdbAsync());

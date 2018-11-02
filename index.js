@@ -15,7 +15,7 @@ const {
   setKarma,
   setUserNamesTable,
   getUserName,
-} = require('./src/users');
+} = require('./src/db/users');
 
 // Initialize
 const app = express();
@@ -59,10 +59,7 @@ app.post('/', (req, res) => {
     return res.sendStatus(200);
   }
   // TEMP
-  if (CHANNEL_URLS[event.channel]
-    && event.text
-    && event.text.includes('@')
-    && (event.text.includes('++') || event.text.includes('--'))) {
+  if (CHANNEL_URLS[event.channel]) {
     return messagesController.handleMessage(req, res);
   }
   return res.sendStatus(200);

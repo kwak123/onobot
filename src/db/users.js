@@ -1,4 +1,4 @@
-const redis = require('./db/redis');
+const redis = require('./redis');
 
 const USER_IDS_HASH = 'user_ids';
 

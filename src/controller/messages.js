@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const messagesUtil = require('../utils/messages.util');
-const users = require('../users');
+const users = require('../db/users');
 
 const { CHANNEL_URLS } = require('../../private');
 
