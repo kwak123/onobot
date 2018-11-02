@@ -4,9 +4,15 @@ const axios = require('axios');
 /* eslint-disable-line */ const bodyParser = require('body-parser');
 /* eslint-disable-line */ const redis = require('./src/db/redis');
 
-const { getOrAddUser, setKarma } = require('./src/users');
+const { getAllUsers } = require('./src/slackClient');
 const { NODE_ENV_PROD } = require('./constants');
 const { CHANNEL_URLS } = require('./private');
+const {
+  getOrAddUser,
+  setKarma,
+  setUserNamesTable,
+  getUserName,
+} = require('./src/users');
 
 // Initialize
 const app = express();
@@ -25,6 +31,16 @@ app.get('/', (req, res) => {
   res.send('Sup');
 });
 
+app.post('/update/users', (req, res) => {
+  const { key } = req.body;
+  if (key !== process.env.PRIVILEGED) {
+    return res.sendStatus(403);
+  }
+  return getAllUsers()
+    .then(members => setUserNamesTable({ members }))
+    .then(() => res.sendStatus(200));
+});
+
 // Challenge
 app.post('/', (req, res) => {
   const { type } = req.body;
@@ -33,7 +49,6 @@ app.post('/', (req, res) => {
   }
 
   const { event } = req.body;
-  console.log(req.body);
   // console.log(req.body);
   // Ignore other bots and myself
   if (event.bot_id) {
@@ -49,10 +64,12 @@ app.post('/', (req, res) => {
     const karmaUp = event.text.includes('++');
     return getOrAddUser({ userName })
       .then(() => setKarma({ userName, karmaUp }))
-      .then(({ karma }) => axios.post(
-        CHANNEL_URLS[event.channel],
-        { text: `<@${userName}>: ${karma}` },
-      )).then(() => {
+      .then(({ karma }) => getUserName({ userName })
+        .then(name => axios.post(
+          CHANNEL_URLS[event.channel],
+          { text: `@${userName} (${name}): ${karma}` },
+        )))
+      .then(() => {
         console.log('sent');
         res.sendStatus(200);
       })
