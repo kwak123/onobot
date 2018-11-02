@@ -5,8 +5,8 @@ const axios = require('axios');
 /* eslint-disable-line */ const redis = require('./src/db/redis');
 
 const { getOrAddUser, setKarma } = require('./src/users');
-
 const { NODE_ENV_PROD } = require('./constants');
+const { CHANNEL_URLS } = require('./private');
 
 // Initialize
 const app = express();
@@ -33,23 +33,25 @@ app.post('/', (req, res) => {
   }
 
   const { event } = req.body;
+  console.log(req.body);
   // console.log(req.body);
   // Ignore other bots and myself
   if (event.bot_id) {
     return res.sendStatus(200);
   }
   // TEMP
-  if (event.channel === 'CDUAQ8AMB'
+  if (CHANNEL_URLS[event.channel]
     && event.text
     && event.text.includes('@')
     && (event.text.includes('++') || event.text.includes('--'))) {
-    const { user } = event;
+    // const { user } = event;
+    const userName = event.text.slice(2, 11);
     const karmaUp = event.text.includes('++');
-    return getOrAddUser({ userName: user })
-      .then(() => setKarma({ userName: user, karmaUp }))
+    return getOrAddUser({ userName })
+      .then(() => setKarma({ userName, karmaUp }))
       .then(({ karma }) => axios.post(
-        'https://hooks.slack.com/services/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',
-        { text: `<@${user}>: ${karma}` },
+        CHANNEL_URLS[event.channel],
+        { text: `<@${userName}>: ${karma}` },
       )).then(() => {
         console.log('sent');
         res.sendStatus(200);
