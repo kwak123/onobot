@@ -4,6 +4,9 @@ const axios = require('axios');
 /* eslint-disable-line */ const bodyParser = require('body-parser');
 /* eslint-disable-line */ const redis = require('./src/db/redis');
 
+// Controllers
+const messagesController = require('./src/controller/messages');
+
 const { getAllUsers } = require('./src/slackClient');
 const { NODE_ENV_PROD } = require('./constants');
 const { CHANNEL_URLS } = require('./private');
@@ -51,6 +54,7 @@ app.post('/', (req, res) => {
   const { event } = req.body;
   // console.log(req.body);
   // Ignore other bots and myself
+  console.log(event);
   if (event.bot_id) {
     return res.sendStatus(200);
   }
@@ -59,24 +63,7 @@ app.post('/', (req, res) => {
     && event.text
     && event.text.includes('@')
     && (event.text.includes('++') || event.text.includes('--'))) {
-    // const { user } = event;
-    const userName = event.text.slice(2, 11);
-    const karmaUp = event.text.includes('++');
-    return getOrAddUser({ userName })
-      .then(() => setKarma({ userName, karmaUp }))
-      .then(({ karma }) => getUserName({ userName })
-        .then(name => axios.post(
-          CHANNEL_URLS[event.channel],
-          { text: `@${userName} (${name}): ${karma}` },
-        )))
-      .then(() => {
-        console.log('sent');
-        res.sendStatus(200);
-      })
-      .catch((error) => {
-        console.warn(error);
-        res.sendStatus(500);
-      });
+    return messagesController.handleMessage(req, res);
   }
   return res.sendStatus(200);
 });
