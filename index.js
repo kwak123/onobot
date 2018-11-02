@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 /* eslint-disable-line */ const dotenv = require('dotenv').config();
 /* eslint-disable-line */ const bodyParser = require('body-parser');
 /* eslint-disable-line */ const redis = require('./src/db/redis');
@@ -24,10 +25,32 @@ app.get('/', (req, res) => {
 
 // Challenge
 app.post('/', (req, res) => {
+  const { type } = req.body;
+  if (type === 'url_verification') {
+    return res.send(req.body.challenge);
+  }
+
+  const { event } = req.body;
   console.log(req.body);
-  const { challenge, type } = req.body;
-  if (type !== 'url_verification') {
-    return res.send(challenge);
+  // Ignore other bots and myself
+  if (event.bot_id) {
+    return res.sendStatus(200);
+  }
+  // TEMP
+  if (event.channel === 'CDUAQ8AMB' && event.text && event.text.includes('@')) {
+    const { user } = event;
+    return axios.post(
+      'https://hooks.slack.com/services/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',
+      { text: `hello <@${user}>` },
+    )
+      .then(() => {
+        console.log('sent');
+        res.sendStatus(200);
+      })
+      .catch((error) => {
+        console.warn(error);
+        res.sendStatus(500);
+      });
   }
   return res.sendStatus(200);
 });
