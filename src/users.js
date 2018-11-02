@@ -1,12 +1,23 @@
 const redis = require('./db/redis');
 
-const USER_SET = 'usernames';
+const addUser = ({ userName }) => redis.hmsetAsync(
+  userName,
+  'karma', 0,
+  'birthday', '',
+);
 
-const addUser = ({ userName }) => redis.saddAsync(USER_SET, userName);
+const getUser = ({ userName }) => redis.hgetallAsync(userName);
+
+const getOrAddUser = ({ userName }) => getUser({ userName })
+  .then((result) => {
+    if (!result) {
+      return addUser({ userName }).then(() => getUser({ userName }));
+    }
+    return result;
+  });
 
 module.exports = {
-  CONSTANTS: {
-    USER_SET,
-  },
   addUser,
+  getUser,
+  getOrAddUser,
 };
