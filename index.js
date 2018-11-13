@@ -44,6 +44,10 @@ app.post('/update/users', (req, res) => {
     .then(() => res.sendStatus(200));
 });
 
+app.post('/command', (req, res) => {
+  console.log(req);
+  res.send('Hello');
+});
 // Challenge
 app.post('/', (req, res) => {
   const { type } = req.body;

@@ -23,6 +23,8 @@ const handleMessage = (req, res) => {
         )))
       .then(() => res.sendStatus(200));
   }
+
+  return res.sendStatus(400);
 };
 
 module.exports = {
