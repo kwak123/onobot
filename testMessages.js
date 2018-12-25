@@ -40,7 +40,7 @@ const exampleMessages = {
     channel_type: 'channel',
   },
   removeKarmaWithUserName: {
-    client_msg_id: '9c585000-128a-4d22-b355-cae2bbc012c1',
+    client_msg_id: '9c585010-128a-4d22-b355-cae2bbc012c1',
     type: 'message',
     text: '@kwakles--',
     user: 'UDMKHPM37',

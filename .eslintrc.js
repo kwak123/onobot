@@ -18,6 +18,7 @@ module.exports = {
     'no-underscore-dangle': 'off',
     'max-len': ['error', { code: 150 }],
     'brace-style': ['error', 'stroustrup'],
+    "react/prop-types": 0,
   },
   settings: {
     react: {

@@ -57,12 +57,12 @@ app.post('/', (req, res) => {
   }
 
   const { event } = req.body;
-  // console.log(req.body);
+
   // Ignore other bots and myself
-  console.log(event);
   if (event.bot_id) {
     return res.sendStatus(200);
   }
+
   // TEMP
   if (CHANNEL_URLS[event.channel]) {
     return messagesController.handleMessage(req, res);

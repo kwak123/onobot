@@ -1,28 +1,15 @@
 import React from 'react';
+import axios from 'axios';
 
-// Data
-import testMessages from '../testMessages';
+import MessageList from './MessageList/MessageList';
 
 class App extends React.Component {
-  constructor() {
-    super();
-    this.messageKeys = Object.keys(testMessages);
-  }
-
-  tempMethod = () => console.log('hello');
+  tempMethod = message => axios.post('/', { event: message });
 
   render() {
     return (
       <div>
-        <ul>
-          {this.messageKeys.map((key) => {
-            /* eslint-disable camelcase */
-            const { client_msg_id } = testMessages[key];
-            return (
-              <li key={client_msg_id}>{key}</li>
-            );
-          })}
-        </ul>
+        <MessageList onMessageClick={this.tempMethod}/>
       </div>
     );
   }
