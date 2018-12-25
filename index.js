@@ -28,6 +28,7 @@ const logger = (req, res, next) => {
 };
 app.use(logger);
 app.use(bodyParser.json());
+app.use(express.static('./dist'));
 
 /* Routing */
 app.get('/', (req, res) => {
@@ -69,5 +70,5 @@ app.post('/', (req, res) => {
   return res.sendStatus(200);
 });
 
-const port = process.env.NODE_ENV === NODE_ENV_PROD ? 8080 : 3001;
+const port = process.env.NODE_ENV === NODE_ENV_PROD ? 8080 : 49001;
 app.listen(port, () => console.log(`now listening on port ${port}`));

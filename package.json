@@ -6,7 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=prod; node index.js",
     "dev": "NODE_ENV=dev; nodemon index.js",
-    "test": "NODE_ENV=test; jest"
+    "test": "NODE_ENV=test; jest",
+    "react-dev": "parcel watch client/index.html --out-dir dist"
   },
   "author": "Samuel Kwak <kwak123@gmail.com>",
   "license": "ISC",
@@ -22,14 +23,25 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "redis": "^2.8.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "eslint": "^5.8.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^21.26.2",
+    "eslint-plugin-jest": "^22.1.2",
+    "eslint-plugin-react": "^7.11.1",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.5"
+    "nodemon": "^1.18.5",
+    "parcel-bundler": "^1.11.0"
   }
 }
