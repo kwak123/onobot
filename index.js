@@ -1,7 +1,6 @@
 const express = require('express');
-const axios = require('axios');
+const bodyParser = require('body-parser');
 /* eslint-disable-line */ const dotenv = require('dotenv').config();
-/* eslint-disable-line */ const bodyParser = require('body-parser');
 /* eslint-disable-line */ const redis = require('./src/db/redis');
 
 // Controllers
@@ -9,7 +8,7 @@ const messagesController = require('./src/controller/messages');
 
 const { getAllUsers } = require('./src/slackClient');
 const { NODE_ENV_PROD } = require('./constants');
-const { CHANNEL_URLS } = require('./private');
+
 const {
   getOrAddUser,
   setKarma,
@@ -63,11 +62,7 @@ app.post('/', (req, res) => {
     return res.sendStatus(200);
   }
 
-  // TEMP
-  if (CHANNEL_URLS[event.channel]) {
-    return messagesController.handleMessage(req, res);
-  }
-  return res.sendStatus(200);
+  return messagesController.handleMessage(req, res);
 });
 
 const port = process.env.NODE_ENV === NODE_ENV_PROD ? 8080 : 49001;

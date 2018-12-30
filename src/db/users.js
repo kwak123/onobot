@@ -2,23 +2,16 @@ const redis = require('./redis');
 
 const USER_IDS_HASH = 'user_ids';
 
-const addUser = ({ userName }) => redis.hmsetAsync(
-  userName,
+const addUser = ({ userId, userName }) => redis.hmsetAsync(
+  userId,
+  'name', userName,
   'karma', 0,
   'birthday', '',
 );
 
-const getUser = ({ userName }) => redis.hgetallAsync(userName);
+const getUser = ({ userId }) => redis.hgetallAsync(userId);
 
-const getOrAddUser = ({ userName }) => getUser({ userName })
-  .then((result) => {
-    if (!result) {
-      return addUser({ userName }).then(() => getUser({ userName }));
-    }
-    return result;
-  });
-
-const setKarma = ({ userName, karmaUp = true }) => getOrAddUser({ userName })
+const setKarma = ({ userId, karmaUp = true }) => getUser({ userId })
   .then((result) => {
     let karma = parseInt(result.karma, 10);
     if (karmaUp) {
@@ -27,8 +20,8 @@ const setKarma = ({ userName, karmaUp = true }) => getOrAddUser({ userName })
     else {
       karma -= 1;
     }
-    return redis.hsetAsync(userName, 'karma', karma)
-      .then(() => getUser({ userName }));
+    return redis.hsetAsync(userId, 'karma', karma)
+      .then(() => getUser({ userId }));
   });
 
 const setUserNamesTable = ({ members }) => {
@@ -46,7 +39,6 @@ const getUserName = ({ userName }) => {
 module.exports = {
   addUser,
   getUser,
-  getOrAddUser,
   getUserName,
   setKarma,
   setUserNamesTable,
