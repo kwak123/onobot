@@ -35,7 +35,6 @@ const handleMessage = async (req, res) => {
 
       const newText = `*@${userRecord.name}*: ${karma}`;
 
-      // await axios.post(CHANNEL_URLS[channel], channelMessage);
       await slackClient.postMessage({ channel, text: newText });
     }
     catch (e) {

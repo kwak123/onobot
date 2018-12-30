@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 /* eslint-disable-line */ const dotenv = require('dotenv').config();
 /* eslint-disable-line */ const redis = require('./src/db/redis');
 
-const { CHANNEL_URLS } = require('./private');
-
 // Controllers
 const messagesController = require('./src/controller/messages');
 
@@ -44,10 +42,6 @@ app.post('/', (req, res) => {
   // Ignore other bots and myself
   if (event.bot_id) {
     return res.sendStatus(200);
-  }
-
-  if (!CHANNEL_URLS[event.channel]) {
-    console.log(event.channel);
   }
 
   return messagesController.handleMessage(req, res);
