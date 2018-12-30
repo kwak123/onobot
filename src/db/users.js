@@ -1,5 +1,6 @@
 const redis = require('./redis');
 
+// Do I need this?
 const USER_IDS_HASH = 'user_ids';
 
 const addUser = ({ userId, userName }) => redis.hmsetAsync(

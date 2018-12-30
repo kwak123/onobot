@@ -1,11 +1,6 @@
-const axios = require('axios');
-
 const messagesUtil = require('../utils/messages.util');
 const users = require('../db/users');
-// const channels = require('../db/channels');
 const slackClient = require('../slackClient');
-
-const { CHANNEL_URLS } = require('../../private');
 
 const handleMessage = async (req, res) => {
   const { event: { text, channel } } = req.body;
@@ -17,13 +12,15 @@ const handleMessage = async (req, res) => {
       const karmaString = isKarmaModifier[0];
       const userId = karmaString.slice(2, 11);
       const karmaUp = karmaString.slice(-2) === '++';
+
+      // let channelUrl = await channels.getChannelUrl(channel);
+
+      // if (!channelUrl) {
+      //   const channelInfo = await slackClient.fetchChannelInfo(channel);
+      // }
       // Check we have the channel
       // If not, just return
       // TODO: Channels should be able to be added and integrated on first use
-      if (!CHANNEL_URLS[channel]) {
-        console.log('Invalid channel');
-        return res.send(200);
-      }
 
       // If we do, check if we have user info
       let userRecord = await users.getUser({ userId });
@@ -32,7 +29,9 @@ const handleMessage = async (req, res) => {
       if (!userRecord) {
         // Get user info from slack
         const fetchedUser = await slackClient.fetchUserInfo(userId);
-        const userName = fetchedUser.user.name;
+        const userName = fetchedUser.user.profile.display_name;
+
+        console.log(fetchedUser);
 
         // Add user data to redis
         // TODO: This can be done a bit smarter
@@ -45,10 +44,10 @@ const handleMessage = async (req, res) => {
       // Now that we have user info, update db karma
       const karma = await users.setKarma({ userId, oldKarma, karmaUp });
 
-      // Send the new message to the channel
-      // TODO: Use display name
-      const channelMessage = { text: `*@${userRecord.name}*: ${karma}` };
-      await axios.post(CHANNEL_URLS[channel], channelMessage);
+      const newText = `*@${userRecord.name}*: ${karma}`;
+
+      // await axios.post(CHANNEL_URLS[channel], channelMessage);
+      await slackClient.postMessage({ channel, text: newText });
     }
     catch (e) {
       console.warn(e);
