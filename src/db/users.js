@@ -9,19 +9,8 @@ const addUser = ({ userId, userName }) => redis.hmsetAsync(
 
 const getUser = ({ userId }) => redis.hgetallAsync(userId);
 
-const setKarma = ({ userId, oldKarma, karmaUp = true }) => {
-  let newKarma = parseInt(oldKarma, 10);
-
-  if (karmaUp) {
-    newKarma += 1;
-  }
-  else {
-    newKarma -= 1;
-  }
-
-  return redis.hsetAsync(userId, 'karma', newKarma)
-    .then(() => newKarma);
-};
+const setKarma = ({ userId, newKarma }) => redis.hsetAsync(userId, 'karma', newKarma)
+  .then(() => newKarma);
 
 module.exports = {
   addUser,

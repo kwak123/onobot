@@ -41,35 +41,20 @@ describe('users', () => {
   });
 
   describe('setKarma', () => {
-    it('karmaUp === true, add 1 to karma', () => {
+    it('sets karma and returns new karma', () => {
       const userId = 'id';
-      const oldKarma = 1;
-      const karmaUp = true;
-      return users.setKarma({ userId, oldKarma, karmaUp })
-        .then((newKarma) => {
-          expect(newKarma).toEqual(oldKarma + 1);
-          return redis.hgetAsync(userId, 'karma');
-        })
-        .then((karmaInDb) => {
-          // Everything in redis is a string
-          const numberfiedKarma = parseInt(karmaInDb, 10);
-          expect(numberfiedKarma).toEqual(oldKarma + 1);
-        });
-    });
+      const newKarma = 3;
 
-    it('karmaUp === false, remove 1 from karma', () => {
-      const userId = 'id';
-      const oldKarma = 2;
-      const karmaUp = false;
-      return users.setKarma({ userId, oldKarma, karmaUp })
-        .then((newKarma) => {
-          expect(newKarma).toEqual(oldKarma - 1);
+      return users.setKarma({ userId, newKarma })
+        .then((karma) => {
+          expect(karma).toEqual(newKarma);
+          // Check db is updated
           return redis.hgetAsync(userId, 'karma');
         })
-        .then((karmaInDb) => {
-          // Everything in redis is a string
-          const numberfiedKarma = parseInt(karmaInDb, 10);
-          expect(numberfiedKarma).toEqual(oldKarma - 1);
+        .then((karmaFromDatabase) => {
+          // Redis always returns strings
+          const numberfiedKarma = parseInt(karmaFromDatabase, 10);
+          expect(numberfiedKarma).toEqual(newKarma);
         });
     });
   });

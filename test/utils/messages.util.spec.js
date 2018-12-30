@@ -36,4 +36,72 @@ describe('messages.util', () => {
       expect(result).toEqual(null);
     });
   });
+
+  describe('getKarmaModifierList', () => {
+    it('empty string, return empty array', () => {
+      const result = util.getKarmaModifierList('');
+      expect(result).toEqual([]);
+    });
+
+    it('has no karma modifiers, return empty array', () => {
+      const result = util.getKarmaModifierList('<@12345678>');
+      expect(result).toEqual([]);
+    });
+
+    it('has one karmaModifier, return array', () => {
+      const oneModifier = '<@12345678>++';
+      const result = util.getKarmaModifierList(oneModifier);
+      expect(result).toEqual([oneModifier]);
+    });
+
+    it('has two karmaModifer, return array', () => {
+      const oneModifier = '<@12345678>++';
+      const twoModifier = '<@87654321>--';
+      const result = util.getKarmaModifierList(`${oneModifier} ${twoModifier}`);
+      expect(result).toEqual([oneModifier, twoModifier]);
+    });
+
+    it('has two split karmaModifer, return array', () => {
+      const oneModifier = '<@12345678>++';
+      const twoModifier = '<@87654321>--';
+      const result = util.getKarmaModifierList(`${oneModifier} notvalid ${twoModifier}`);
+      expect(result).toEqual([oneModifier, twoModifier]);
+    });
+  });
+
+  describe('parseKarmaModifierList', () => {
+    it('empty array, return empty object', () => {
+      const result = util.parseKarmaModifierList([]);
+      expect(result).toEqual({});
+    });
+
+    it('creates expected map with one modifier', () => {
+      const oneModifier = '<@123456789>++';
+      const expected = {
+        123456789: 1,
+      };
+      const result = util.parseKarmaModifierList([oneModifier]);
+      expect(result).toEqual(expected);
+    });
+
+    it('creates expected map with double modifier', () => {
+      const oneModifier = '<@123456789>++';
+      const expected = {
+        123456789: 2,
+      };
+      const result = util.parseKarmaModifierList([oneModifier, oneModifier]);
+      expect(result).toEqual(expected);
+    });
+
+    it('creates expected map with two users', () => {
+      const oneModifier = '<@123456789>++';
+      const twoModifier = '<@987654321>--';
+      const expected = {
+        123456789: 1,
+        987654321: -1,
+      };
+      const result = util.parseKarmaModifierList([oneModifier, twoModifier]);
+      expect(result).toEqual(expected);
+    });
+  });
 });
