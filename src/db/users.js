@@ -11,24 +11,18 @@ const addUser = ({ userId, userName }) => redis.hmsetAsync(
 
 const getUser = ({ userId }) => redis.hgetallAsync(userId);
 
-const setKarma = ({ userId, karmaUp = true }) => getUser({ userId })
-  .then((result) => {
-    let karma = parseInt(result.karma, 10);
-    if (karmaUp) {
-      karma += 1;
-    }
-    else {
-      karma -= 1;
-    }
-    return redis.hsetAsync(userId, 'karma', karma)
-      .then(() => getUser({ userId }));
-  });
+const setKarma = ({ userId, oldKarma, karmaUp = true }) => {
+  let newKarma = parseInt(oldKarma, 10);
 
-const setUserNamesTable = ({ members }) => {
-  const pluckedMemberDetailsArray = members.map(({ id, name }) => ({ id, name }));
-  const promisifiedMemberDetailsArray = pluckedMemberDetailsArray
-    .map(({ id, name }) => redis.hsetAsync(USER_IDS_HASH, id, name));
-  return Promise.all(promisifiedMemberDetailsArray);
+  if (karmaUp) {
+    newKarma += 1;
+  }
+  else {
+    newKarma -= 1;
+  }
+
+  return redis.hsetAsync(userId, 'karma', newKarma)
+    .then(() => newKarma);
 };
 
 const getUserName = ({ userName }) => {
@@ -41,5 +35,4 @@ module.exports = {
   getUser,
   getUserName,
   setKarma,
-  setUserNamesTable,
 };

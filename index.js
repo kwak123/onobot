@@ -6,15 +6,7 @@ const bodyParser = require('body-parser');
 // Controllers
 const messagesController = require('./src/controller/messages');
 
-const { getAllUsers } = require('./src/slackClient');
 const { NODE_ENV_PROD } = require('./constants');
-
-const {
-  getOrAddUser,
-  setKarma,
-  setUserNamesTable,
-  getUserName,
-} = require('./src/db/users');
 
 // Initialize
 const app = express();
@@ -32,16 +24,6 @@ app.use(express.static('./dist'));
 /* Routing */
 app.get('/', (req, res) => {
   res.send('Sup');
-});
-
-app.post('/update/users', (req, res) => {
-  const { key } = req.body;
-  if (key !== process.env.PRIVILEGED) {
-    return res.sendStatus(403);
-  }
-  return getAllUsers()
-    .then(members => setUserNamesTable({ members }))
-    .then(() => res.sendStatus(200));
 });
 
 app.post('/command', (req, res) => {

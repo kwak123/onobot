@@ -40,9 +40,10 @@ const handleMessage = async (req, res) => {
         userRecord = await users.getUser({ userId });
         console.log(userRecord);
       }
+      const oldKarma = userRecord.karma;
 
       // Now that we have user info, update db karma
-      const { karma } = await users.setKarma({ userId, karmaUp });
+      const karma = await users.setKarma({ userId, oldKarma, karmaUp });
 
       // Send the new message to the channel
       // TODO: Use display name
