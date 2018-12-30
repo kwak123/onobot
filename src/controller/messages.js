@@ -54,16 +54,6 @@ const handleMessage = async (req, res) => {
       console.warn(e);
     }
     return res.sendStatus(200);
-
-    // return channels.refreshChannel(channel)
-    //   .then(() => users.getOrAddUser({ userName }))
-    //   .then(() => users.setKarma({ userName, karmaUp }))
-    //   .then(({ karma }) => users.getUserName({ userName })
-    //     .then(name => axios.post(
-    //       CHANNEL_URLS[event.channel],
-    //       { text: `@${userName} (${name}): ${karma}` },
-    //     )))
-    //   .then(() => res.sendStatus(200));
   }
 
   return res.sendStatus(400);

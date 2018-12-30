@@ -25,14 +25,8 @@ const setKarma = ({ userId, oldKarma, karmaUp = true }) => {
     .then(() => newKarma);
 };
 
-const getUserName = ({ userName }) => {
-  const id = userName; // Variable rename is due
-  return redis.hgetAsync(USER_IDS_HASH, id);
-};
-
 module.exports = {
   addUser,
   getUser,
-  getUserName,
   setKarma,
 };

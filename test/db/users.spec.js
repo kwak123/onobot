@@ -39,4 +39,38 @@ describe('users', () => {
         });
     });
   });
+
+  describe('setKarma', () => {
+    it('karmaUp === true, add 1 to karma', () => {
+      const userId = 'id';
+      const oldKarma = 1;
+      const karmaUp = true;
+      return users.setKarma({ userId, oldKarma, karmaUp })
+        .then((newKarma) => {
+          expect(newKarma).toEqual(oldKarma + 1);
+          return redis.hgetAsync(userId, 'karma');
+        })
+        .then((karmaInDb) => {
+          // Everything in redis is a string
+          const numberfiedKarma = parseInt(karmaInDb, 10);
+          expect(numberfiedKarma).toEqual(oldKarma + 1);
+        });
+    });
+
+    it('karmaUp === false, remove 1 from karma', () => {
+      const userId = 'id';
+      const oldKarma = 2;
+      const karmaUp = false;
+      return users.setKarma({ userId, oldKarma, karmaUp })
+        .then((newKarma) => {
+          expect(newKarma).toEqual(oldKarma - 1);
+          return redis.hgetAsync(userId, 'karma');
+        })
+        .then((karmaInDb) => {
+          // Everything in redis is a string
+          const numberfiedKarma = parseInt(karmaInDb, 10);
+          expect(numberfiedKarma).toEqual(oldKarma - 1);
+        });
+    });
+  });
 });
