@@ -25,7 +25,7 @@ const parseKarmaMessage = async ({ userId, karmaChange }) => {
   return `*@${userRecord.name}*: ${karma}`;
 };
 
-const handleMessage = async (req, res) => {
+const handleKarmaMessage = async (req, res) => {
   try {
     const { event: { text, channel } } = req.body;
 
@@ -49,6 +49,6 @@ const handleMessage = async (req, res) => {
 };
 
 module.exports = {
-  handleMessage,
+  handleKarmaMessage,
   parseKarmaMessage,
 };

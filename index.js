@@ -19,6 +19,7 @@ const logger = (req, res, next) => {
 };
 app.use(logger);
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('./dist'));
 
 /* Routing */
@@ -27,9 +28,10 @@ app.get('/', (req, res) => {
 });
 
 app.post('/command', (req, res) => {
-  console.log(req);
+  console.log(req.body);
   res.send('Hello');
 });
+
 // Challenge
 app.post('/', (req, res) => {
   const { type } = req.body;
@@ -44,7 +46,7 @@ app.post('/', (req, res) => {
     return res.sendStatus(200);
   }
 
-  return messagesController.handleMessage(req, res);
+  return messagesController.handleKarmaMessage(req, res);
 });
 
 const port = process.env.NODE_ENV === NODE_ENV_PROD ? 8080 : 49001;

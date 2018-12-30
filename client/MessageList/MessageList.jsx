@@ -1,14 +1,12 @@
 import React from 'react';
 
-import testMessages from '../../testMessages';
-
-const MessageList = ({ onMessageClick }) => {
-  const messageKeys = Object.keys(testMessages);
+const MessageList = ({ messageList, onMessageClick }) => {
+  const messageKeys = Object.keys(messageList);
   return (
     <ul className='message-list__container'>
       {messageKeys.map((key) => {
         /* eslint-disable camelcase */
-        const message = testMessages[key];
+        const message = messageList[key];
         const { client_msg_id } = message;
 
         return (
