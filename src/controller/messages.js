@@ -9,18 +9,10 @@ const handleMessage = async (req, res) => {
 
   if (isKarmaModifier) {
     try {
+      // TODO: This is pretty jank
       const karmaString = isKarmaModifier[0];
       const userId = karmaString.slice(2, 11);
       const karmaUp = karmaString.slice(-2) === '++';
-
-      // let channelUrl = await channels.getChannelUrl(channel);
-
-      // if (!channelUrl) {
-      //   const channelInfo = await slackClient.fetchChannelInfo(channel);
-      // }
-      // Check we have the channel
-      // If not, just return
-      // TODO: Channels should be able to be added and integrated on first use
 
       // If we do, check if we have user info
       let userRecord = await users.getUser({ userId });
@@ -31,13 +23,10 @@ const handleMessage = async (req, res) => {
         const fetchedUser = await slackClient.fetchUserInfo(userId);
         const userName = fetchedUser.user.profile.display_name;
 
-        console.log(fetchedUser);
-
         // Add user data to redis
         // TODO: This can be done a bit smarter
         await users.addUser({ userId, userName });
         userRecord = await users.getUser({ userId });
-        console.log(userRecord);
       }
       const oldKarma = userRecord.karma;
 
@@ -50,12 +39,12 @@ const handleMessage = async (req, res) => {
       await slackClient.postMessage({ channel, text: newText });
     }
     catch (e) {
+      // Hue
       console.warn(e);
     }
-    return res.sendStatus(200);
   }
 
-  return res.sendStatus(400);
+  return res.sendStatus(200);
 };
 
 module.exports = {
