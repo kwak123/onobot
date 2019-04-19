@@ -16,7 +16,7 @@ const { NODE_ENV_PROD } = require('./constants');
 const app = express();
 
 /* Middleware */
-const logger = (req: Request, _: any, next: NextFunction) => {
+const logger = (req: Request, _: Response, next: NextFunction) => {
   /* eslint-disable-next-line no-console */
   console.log(`received ${req.method} at ${req.url}`);
   next();
