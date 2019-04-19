@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 // Controllers
 const messagesController = require('./src/controller/messages');
+const commandsController = require('./src/controller/commands');
 
 const { NODE_ENV_PROD } = require('./constants');
 
@@ -28,8 +29,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/command', (req, res) => {
+  commandsController.parseCommandIntent(req, res);
+});
+
+app.post('/dialog', (req, res) => {
   console.log(req.body);
-  res.send('Hello');
+  res.sendStatus(200);
 });
 
 // Challenge
