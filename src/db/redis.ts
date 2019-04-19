@@ -11,8 +11,8 @@ const client = redis.createClient({
 /* eslint-disable no-console */
 client.on('connect', () => console.log('connecting to redis'));
 client.on('ready', () => console.log('connected to redis'));
-client.on('error', error => console.error('redis error', error));
-client.on('warning', warning => console.warn('redis warning', warning));
+client.on('error', (error: Error) => console.error('redis error', error));
+client.on('warning', (warning: any) => console.warn('redis warning', warning));
 /* eslint-enable no-console */
 
 module.exports = client;

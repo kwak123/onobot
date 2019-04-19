@@ -13,7 +13,7 @@ const postMessage = ({ channel, text }) => client.chat.postMessage({ channel, te
 
 const postDialog = ({ triggerId, dialog }) => client.dialog.open({ trigger_id: triggerId, dialog }).catch(e => console.log(e.data));
 
-module.exports = {
+export default {
   getAllUsers,
   fetchUserInfo,
   fetchChannelInfo,

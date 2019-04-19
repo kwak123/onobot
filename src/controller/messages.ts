@@ -1,8 +1,15 @@
-const messagesUtil = require('../utils/messages.util');
-const users = require('../db/users');
-const slackClient = require('../slackClient');
+import messagesUtil, { KarmaHash } from '../utils/messages.util';
+import users from '../db/users';
+import slackClient from '../slackClient';
+import { Request, Response } from 'express';
 
-const parseKarmaMessage = async ({ userId, karmaChange }) => {
+// TODO: Unite all these karma types somewhere
+export interface KarmaMessage {
+  userId: string,
+  karmaChange: number,
+};
+
+const parseKarmaMessage = async ({ userId, karmaChange }: KarmaMessage) => {
   let userRecord = await users.getUser({ userId });
 
   // If no user info, fetch user info
@@ -25,7 +32,7 @@ const parseKarmaMessage = async ({ userId, karmaChange }) => {
   return `*@${userRecord.name}*: ${karma}`;
 };
 
-const handleKarmaMessage = async (req, res) => {
+const handleKarmaMessage = async (req: Request, res: Response) => {
   try {
     const { event: { text, channel } } = req.body;
 
@@ -33,7 +40,7 @@ const handleKarmaMessage = async (req, res) => {
 
     // Natural no-op if length of array is empty
     // Turn array into hash of username with total karma change
-    const parsedKarmaModifierHash = messagesUtil.parseKarmaModifierList(getKarmaModifierList);
+    const parsedKarmaModifierHash: KarmaHash = messagesUtil.parseKarmaModifierList(getKarmaModifierList);
 
     // TOOD: This can be done better
     Object.keys(parsedKarmaModifierHash).forEach(async (userId) => {
@@ -48,7 +55,7 @@ const handleKarmaMessage = async (req, res) => {
   return res.sendStatus(200);
 };
 
-module.exports = {
+export default {
   handleKarmaMessage,
   parseKarmaMessage,
 };

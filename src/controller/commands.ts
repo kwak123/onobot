@@ -1,14 +1,15 @@
-const moment = require('moment');
-const slackClient = require('../slackClient');
-const dialogBox = require('./dialogBox.json');
+import moment from 'moment';
+import { Request, Response } from 'express';
+// import slackClient from '../slackClient';
+import dialogBox from './dialogBox';
 
-const parseCommandIntent = (req, res) => {
+const parseCommandIntent = (req: Request, res: Response) => {
   /* eslint-disable camelcase */
-  const { text, trigger_id } = req.body;
+  const { text, trigger_id }: { text: String, trigger_id: String } = req.body;
   console.log(text);
 
   const commandSet = text.split(' ');
-  const userTag = commandSet.find(command => command.match(/<@.+>/gi));
+  const userTag = commandSet.find(command => command.match(/<@.+>/gi) !== null);
 
   if (commandSet.includes('birthday')) {
     if (userTag) {
@@ -43,6 +44,6 @@ const parseCommandIntent = (req, res) => {
   return res.send('Couldn\'t guess what you wanted');
 };
 
-module.exports = {
+export default {
   parseCommandIntent,
 };
