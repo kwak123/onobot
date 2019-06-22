@@ -1,15 +1,15 @@
-import messagesUtil, { KarmaHash } from '../utils/messages.util';
-import users from '../db/users';
-import slackClient from '../slackClient';
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
+import users from "../db/users";
+import slackClient from "../slackClient";
+import messagesUtil, { IKarmaHash } from "../utils/messages.util";
 
 // TODO: Unite all these karma types somewhere
-export interface KarmaMessage {
-  userId: string,
-  karmaChange: number,
-};
+export interface IKarmaMessage {
+  userId: string;
+  karmaChange: number;
+}
 
-const parseKarmaMessage = async ({ userId, karmaChange }: KarmaMessage) => {
+const parseKarmaMessage = async ({ userId, karmaChange }: IKarmaMessage) => {
   let userRecord = await users.getUser({ userId });
 
   // If no user info, fetch user info
@@ -34,13 +34,15 @@ const parseKarmaMessage = async ({ userId, karmaChange }: KarmaMessage) => {
 
 const handleKarmaMessage = async (req: Request, res: Response) => {
   try {
-    const { event: { text, channel } } = req.body;
+    const {
+      event: { text, channel },
+    } = req.body;
 
     const getKarmaModifierList = messagesUtil.getKarmaModifierList(text);
 
     // Natural no-op if length of array is empty
     // Turn array into hash of username with total karma change
-    const parsedKarmaModifierHash: KarmaHash = messagesUtil.parseKarmaModifierList(getKarmaModifierList);
+    const parsedKarmaModifierHash: IKarmaHash = messagesUtil.parseKarmaModifierList(getKarmaModifierList);
 
     // TOOD: This can be done better
     Object.keys(parsedKarmaModifierHash).forEach(async (userId) => {
@@ -48,8 +50,8 @@ const handleKarmaMessage = async (req: Request, res: Response) => {
       const newText = await parseKarmaMessage({ userId, karmaChange });
       slackClient.postMessage({ channel, text: newText });
     });
-  }
-  catch (e) {
+  } catch (e) {
+    // tslint:disable-next-line
     console.warn(e);
   }
   return res.sendStatus(200);

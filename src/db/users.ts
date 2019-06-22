@@ -1,24 +1,19 @@
-const redis = require('./redis');
+import redis from "./redis";
 
-export interface User {
-  userId: string,
-  userName?: string,
-};
+const { client } = redis;
 
-const addUser = ({ userId, userName }: User) => redis.hmsetAsync(
-  userId,
-  'name', userName,
-  'karma', 0,
-  'birthday', '',
-);
+export interface IUser {
+  userId: string;
+  userName?: string;
+}
 
-const getUser = ({ userId }: User) => redis.hgetallAsync(userId);
+const addUser = ({ userId, userName }: IUser) =>
+  client.hmsetAsync(userId, "name", userName, "karma", 0, "birthday", "");
 
-const setKarma = ({
-  userId,
-  newKarma,
-}: { userId: string, newKarma: number }) => redis.hsetAsync(userId, 'karma', newKarma)
-  .then(() => newKarma);
+const getUser = ({ userId }: IUser) => client.hgetallAsync(userId);
+
+const setKarma = ({ userId, newKarma }: { userId: string; newKarma: number }) =>
+  client.hsetAsync(userId, "karma", newKarma).then(() => newKarma);
 
 export default {
   addUser,

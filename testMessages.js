@@ -61,7 +61,7 @@ const exampleMessages = {
       user_id: 'UDMKHPM37',
       user_name: 'kwak123',
       command: '/onobot',
-      text: '<@UDMKHPM37|kwak123> set birthday July 3 , 1989',
+      text: '<@UDMKHPM37|kwak123> set birthday',
       response_url: 'https://hooks.slack.com/commands/T4C5WBHFA/514729238695/HvGhKbgWJPjvwTakNJowRrWL',
       trigger_id: '513072495681.148200391520.9186706b948539b60105495331aae087',
     },

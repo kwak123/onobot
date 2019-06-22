@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const MessageList = ({ messageList, onMessageClick }) => {
   const messageKeys = Object.keys(messageList);
   return (
-    <ul className='message-list__container'>
+    <ul className="message-list__container">
       {messageKeys.map((key) => {
         /* eslint-disable camelcase */
         const message = messageList[key];
