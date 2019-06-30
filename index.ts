@@ -1,16 +1,17 @@
-import express, { Request, NextFunction, Response } from 'express';
+import express from "express";
+import { NextFunction, Request, Response } from "express";
 
-/* eslint-disable-line */ const dotenv = require('dotenv').config();
-/* eslint-disable-line */ const redis = require('./src/db/redis');
+/* tslint:disable-line */ const dotenv = require("dotenv").config();
+/* tslint:disable-line */ const redis = require("./src/db/redis");
 
 // Controllers
-import messagesController from './src/controller/messages';
-import commandsController from './src/controller/commands';
+import commandsController from "./src/controller/commands";
+import messagesController from "./src/controller/messages";
 
 // Deprecated
-import bodyParser from 'body-parser';
+import bodyParser from "body-parser";
 
-const { NODE_ENV_PROD } = require('./constants');
+import { NODE_ENV_PROD } from "./constants";
 
 // Initialize
 const app = express();
@@ -24,26 +25,26 @@ const logger = (req: Request, _: Response, next: NextFunction) => {
 app.use(logger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('./dist'));
+app.use(express.static("./dist"));
 
 /* Routing */
-app.get('/', (req: Request, res: Response) => {
-  res.send('Sup');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Sup");
 });
 
-app.post('/command', (req: Request, res: Response) => {
+app.post("/command", (req: Request, res: Response) => {
   commandsController.parseCommandIntent(req, res);
 });
 
-app.post('/dialog', (req: Request, res: Response) => {
+app.post("/dialog", (req: Request, res: Response) => {
   console.log(req.body);
   res.sendStatus(200);
 });
 
 // Challenge
-app.post('/', (req: Request, res: Response) => {
+app.post("/", (req: Request, res: Response) => {
   const { type } = req.body;
-  if (type === 'url_verification') {
+  if (type === "url_verification") {
     return res.send(req.body.challenge);
   }
 

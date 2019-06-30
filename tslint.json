@@ -1,10 +1,11 @@
 {
   "defaultSeverity": "error",
   "extends": ["tslint:recommended"],
-  "jsRules": {},
-  "rules": {
-    "semicolon": false,
+  "jsRules": {
     "no-unused-variable": true
+  },
+  "rules": {
+    "semicolon": false
   },
   "rulesDirectory": []
 }
